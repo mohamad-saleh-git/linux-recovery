@@ -58,7 +58,7 @@ diff -u -> shows file unified
 ssh -> this is help you to connect secure with ubuntu server or pc -> networkchuck@your_ip
 clear -> you can clean your terminal from your prev command 
 ln -> you can create link it is also similar to shortcut in windows
-! ln has to model ->
+! ln has two model ->
 1 -> Hard link -> ?????????????
 2 ->Soft link -> to create soft link for exmaple location we use -s switch
 ln -s -> ln -s ln -s /home/user/documents/original_file.txt /home/user/desktop/link_to_original.txt -> this is example 
@@ -74,3 +74,12 @@ sudo apt remove -> remove app or package -> sudo apt remove package_name
 
 
 
+if your want to monitor your memory ->
+1 -> free -> ram information in KB
+2 -> free -m -> ram information in MB
+3 -> free -g -> ram information in GB
+3 -> free -h -> Recomended -> ram information in heoman readeble
+
+if your want to monitor your cpu -> 
+1 -> cat /proc/cpuinfo
+2 -> you most be install htop -> sudo apt-get install htop -> and type -> htop
