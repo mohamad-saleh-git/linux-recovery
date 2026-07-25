@@ -1,5 +1,14 @@
 linux-commands for personal useage
-
+for your terminal you need this ->
+  oh my zsh
+  Powerlevel10k
+  zsh-autosuggestions 
+  zsh-syntax-highlighting
+  eza 
+  bat
+  btop
+  tmux
+  fastfetch
 
 pwd -> show your directory location
 ls -> show file and directory
