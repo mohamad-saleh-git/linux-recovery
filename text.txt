@@ -1,94 +1,150 @@
-linux-commands for personal useage
-for your terminal you need this ->
-  oh my zsh
+Linux Commands (for personal use)
+
+==================================================
+Recommended terminal setup
+==================================================
+  oh-my-zsh
   Powerlevel10k
-  zsh-autosuggestions 
+  zsh-autosuggestions
   zsh-syntax-highlighting
-  eza 
+  eza
   bat
   btop
   tmux
   fastfetch
 
-pwd -> show your directory location
-ls -> show file and directory
-ls -ltrh -> show dir items with order
-ls -ltrhA -> show dir items with order and show hidden file 
-cd -> change directory -> cd ~ , cd / , cd.. -> cd folder_name
-mkdir -> make directory -> mkdir folder_name
-rmdir -> remove your directory -> rmdir folder_name
-rm -r -> remove dir with items -> rm -r folder_name 
-rm -rf -> force delete -> rm -rf folder_name
-. -> current directory
-.. -> parent direcroty
-touch -> make empty file -> touch file_name
-! you can create a many file with space 
-! you can create a exmple 10 file with this command -> touch file_name{1..10}
-! you can create file in the future with -d swich -> touch -d tomorrow file_name
-cp -> copy file -> cp source destination
-mv -> move file  or change name file -> mv old_name new_name 
-rm -> remove file -> rm_file   
-cat -> show the text file content -> cat file_name
-tac -> reverse cat
-shred -> this command crush you txt and no one can't read your txt file -> shred file_name !!!!danger!!!!
-grep -> find a letter or word in your file -> grep letter text_file
-less -> show a huge file ( or small file ) page by page with control
-| -> connect two command -> command1 | command2 ->grep letter | less 
-echo -> on this mode this allows you to talk your self -> echo hello!
-! echo allows you to quick add string to your txt_file -> "your_sting" > file_name -> "mamad mamad mamad" > file_name 
-nano -> open a text file with nano text Editor -> nano file_name
-vim -> open a text file with vim text Editor -> vim file_name
-head -> show the first line in the file -> head file_name
-tail -> show the last line in the file -> tail file_name
-man -> if you use before any command give you a explain
-uname -a -> show the system information
-df -h -> show a space in your hard disk
-free -m -> show a free  space in your hard disk
-uptime -> show how does your system on
-top -> show your active process
-ps aux -> show your run process
-kill -> stop process with id -> kill process_id
-killall -> stop all process with name -> killall process_name
-sudo -> runs command with root access -> sudo command
-sudo -s -> give you a root access 
-whoami -> show your username
-id -> show informatoin about user
+==================================================
+Navigation
+==================================================
+pwd             -> show the current directory path
+ls              -> list files and directories
+ls -ltrh        -> list items in long format, sorted by time (oldest first), human-readable sizes
+ls -ltrhA       -> same as above, but also show hidden files
+cd              -> change directory
+                   cd ~            (go to home directory)
+                   cd /            (go to root directory)
+                   cd ..           (go up one level)
+                   cd folder_name  (go into a folder)
+.               -> current directory
+..              -> parent directory
 
-useradd -> add user and don't want password or other parameter
-! for using this command you need to sudo access
-adduser -> make new user -> adduser user_name
-passwd -> change your password -> passwd user_name
-deluser -> delete user -> deluser user_name
-su -> change user -> su user_name
-!for exit user_name type (exit)
+==================================================
+Files and directories
+==================================================
+mkdir           -> make a directory                  -> mkdir folder_name
+rmdir           -> remove an EMPTY directory         -> rmdir folder_name
+rm              -> remove a file                     -> rm file_name
+rm -r           -> remove a directory with its items -> rm -r folder_name
+rm -rf          -> force delete, no confirmation     -> rm -rf folder_name
+                   !!! DANGER: there is no undo !!!
+touch           -> create an empty file              -> touch file_name
+                   ! create many files at once, separated by spaces -> touch file1 file2 file3
+                   ! create 10 files at once                        -> touch file_name{1..10}
+                   ! set a date in the future with -d               -> touch -d tomorrow file_name
+cp              -> copy a file                       -> cp source destination
+mv              -> move a file or rename it          -> mv old_name new_name
 
-diff -> shows file change
-diff -u -> shows file unified
-ssh -> this is help you to connect secure with ubuntu server or pc -> networkchuck@your_ip
-clear -> you can clean your terminal from your prev command 
-ln -> you can create link it is also similar to shortcut in windows
-! ln has two model ->
-1 -> Hard link -> ?????????????
-2 ->Soft link -> to create soft link for exmaple location we use -s switch
-ln -s -> ln -s ln -s /home/user/documents/original_file.txt /home/user/desktop/link_to_original.txt -> this is example 
+==================================================
+Viewing and editing files
+==================================================
+cat             -> show the content of a file        -> cat file_name
+tac             -> same as cat, but in reverse order (last line first)
+head            -> show the first 10 lines           -> head file_name
+tail            -> show the last 10 lines            -> tail file_name
+less            -> view a big (or small) file page by page, with scrolling -> less file_name
+grep            -> search for a word or text in a file -> grep word file_name
+|               -> pipe: send the output of one command to another
+                   command1 | command2
+                   example: cat file_name | grep word | less
+echo            -> print text to the terminal        -> echo "hello!"
+                   ! echo can quickly write text into a file (overwrites the file):
+                     echo "your_string" > file_name
+                   ! use >> to append instead of overwrite:
+                     echo "your_string" >> file_name
+nano            -> open a file in the nano editor    -> nano file_name
+vim             -> open a file in the vim editor     -> vim file_name
+diff            -> show the differences between two files -> diff file1 file2
+diff -u         -> show the differences in unified format -> diff -u file1 file2
+shred           -> overwrite a file so it cannot be recovered -> shred file_name
+                   !!! DANGER: the data is gone for good !!!
+                   add -u to also delete the file afterwards -> shred -u file_name
 
+==================================================
+Help
+==================================================
+man             -> show the manual page of a command -> man command_name
+clear           -> clear the terminal screen
 
+==================================================
+System information
+==================================================
+uname -a        -> show system information
+df -h           -> show disk space usage (human-readable)
+free -m         -> show RAM usage in MB
+uptime          -> show how long the system has been running
+whoami          -> show your username
+id              -> show user ID and group information
 
+==================================================
+Processes
+==================================================
+top             -> show running processes (live)
+ps aux          -> show all running processes
+kill            -> stop a process by its ID          -> kill process_id
+killall         -> stop all processes by name        -> killall process_name
 
+==================================================
+Users and permissions
+==================================================
+sudo            -> run a command with root (admin) access -> sudo command
+sudo -s         -> open a root shell
+su              -> switch to another user            -> su user_name
+                   ! type exit to go back to your previous user
+adduser         -> create a new user (interactive, asks for password and info) -> sudo adduser user_name
+useradd         -> create a new user (low-level: no password and, by default, no home directory)
+                   ! requires sudo
+passwd          -> change a user's password          -> sudo passwd user_name
+deluser         -> delete a user                     -> sudo deluser user_name
 
-sudo apt update -> update package list
-sudo apt upgrade -> upgrade package list
-sudo apt install -> install app or package -> sudo apt install package_name
-sudo apt remove -> remove app or package -> sudo apt remove package_name
+==================================================
+Network
+==================================================
+ssh             -> connect securely to a remote server or PC -> ssh user_name@your_ip
 
+==================================================
+Links
+==================================================
+ln              -> create a link (similar to a shortcut in Windows)
+                   ! there are two types:
+                   1 -> Hard link -> another name for the same file data on disk
+                                     (the data stays until all hard links are deleted)
+                                     ln original_file link_name
+                   2 -> Soft link (symbolic link) -> a pointer to a path, like a shortcut
+                                     use the -s switch
+ln -s           -> ln -s target link_name
+                   example:
+                   ln -s /home/user/documents/original_file.txt /home/user/desktop/link_to_original.txt
 
+==================================================
+Package management (Debian/Ubuntu)
+==================================================
+sudo apt update             -> refresh the package list
+sudo apt upgrade            -> upgrade all installed packages
+sudo apt install            -> install an app or package -> sudo apt install package_name
+sudo apt remove             -> remove an app or package  -> sudo apt remove package_name
 
-if your want to monitor your memory ->
-1 -> free -> ram information in KB
-2 -> free -m -> ram information in MB
-3 -> free -g -> ram information in GB
-3 -> free -h -> Recomended -> ram information in heoman readeble
+==================================================
+Monitoring memory (RAM)
+==================================================
+1 -> free      -> RAM information in KB
+2 -> free -m   -> RAM information in MB
+3 -> free -g   -> RAM information in GB
+4 -> free -h   -> RAM information in human-readable format (recommended)
 
-if your want to monitor your cpu -> 
+==================================================
+Monitoring CPU
+==================================================
 1 -> cat /proc/cpuinfo
-2 -> you most be install htop -> sudo apt-get install htop -> and type -> htop
+2 -> install htop, then run it:
+     sudo apt install htop
+     htop
