@@ -1,39 +1,75 @@
 Linux Commands (for personal use)
 
 ==================================================
-Recommended terminal setup
+Table of contents
+==================================================
+ 1. Recommended terminal setup
+ 2. Navigation
+ 3. Files and directories
+ 4. Viewing and editing files
+ 5. Searching (find, grep, which)
+ 6. Text processing (wc, sort, uniq, cut, sed, awk)
+ 7. Redirection and pipes
+ 8. Help and shell tricks
+ 9. System information
+10. Disk and storage
+11. Processes and jobs
+12. Users and groups
+13. Permissions and ownership
+14. Archives and compression
+15. Network
+16. SSH and file transfer
+17. Links
+18. Package management (Debian/Ubuntu)
+19. Services and logs (systemd)
+20. Scheduled tasks (cron)
+21. Monitoring memory (RAM)
+22. Monitoring CPU
+23. Power
+24. Keyboard shortcuts
+25. Quick danger list
+
+==================================================
+1. Recommended terminal setup
 ==================================================
   oh-my-zsh
   Powerlevel10k
   zsh-autosuggestions
   zsh-syntax-highlighting
-  eza
-  bat
-  btop
-  tmux
-  fastfetch
+  eza            -> a modern replacement for ls
+  bat            -> a modern replacement for cat (syntax highlighting)
+  btop           -> a nice resource monitor
+  tmux           -> multiple terminal sessions in one window
+  fastfetch      -> show system info with a logo
 
 ==================================================
-Navigation
+2. Navigation
 ==================================================
 pwd             -> show the current directory path
 ls              -> list files and directories
-ls -ltrh        -> list items in long format, sorted by time (oldest first), human-readable sizes
+ls -l           -> long format (permissions, owner, size, date)
+ls -a           -> also show hidden files (names that start with a dot)
+ls -ltrh        -> long format, sorted by time (oldest first), human-readable sizes
 ls -ltrhA       -> same as above, but also show hidden files
+tree            -> show directories as a tree (install: sudo apt install tree)
 cd              -> change directory
                    cd ~            (go to home directory)
                    cd /            (go to root directory)
                    cd ..           (go up one level)
+                   cd -            (go back to the previous directory)
                    cd folder_name  (go into a folder)
 .               -> current directory
 ..              -> parent directory
+~               -> your home directory
 
 ==================================================
-Files and directories
+3. Files and directories
 ==================================================
 mkdir           -> make a directory                  -> mkdir folder_name
+mkdir -p        -> make nested directories at once   -> mkdir -p a/b/c
 rmdir           -> remove an EMPTY directory         -> rmdir folder_name
 rm              -> remove a file                     -> rm file_name
+rm -i           -> ask before deleting each file     -> rm -i file_name
 rm -r           -> remove a directory with its items -> rm -r folder_name
 rm -rf          -> force delete, no confirmation     -> rm -rf folder_name
                    !!! DANGER: there is no undo !!!
@@ -42,27 +78,31 @@ touch           -> create an empty file              -> touch file_name
                    ! create 10 files at once                        -> touch file_name{1..10}
                    ! set a date in the future with -d               -> touch -d tomorrow file_name
 cp              -> copy a file                       -> cp source destination
+cp -r           -> copy a directory                  -> cp -r source_dir destination
 mv              -> move a file or rename it          -> mv old_name new_name
+stat            -> show detailed info about a file (size, dates, permissions) -> stat file_name
+file            -> show the type of a file           -> file file_name
+basename        -> show only the file name of a path -> basename /home/user/a.txt  (a.txt)
+dirname         -> show only the directory of a path -> dirname /home/user/a.txt   (/home/user)
 
 ==================================================
-Viewing and editing files
+4. Viewing and editing files
 ==================================================
 cat             -> show the content of a file        -> cat file_name
+cat -n          -> show with line numbers            -> cat -n file_name
 tac             -> same as cat, but in reverse order (last line first)
 head            -> show the first 10 lines           -> head file_name
+head -n 5       -> show the first 5 lines            -> head -n 5 file_name
 tail            -> show the last 10 lines            -> tail file_name
-less            -> view a big (or small) file page by page, with scrolling -> less file_name
-grep            -> search for a word or text in a file -> grep word file_name
-|               -> pipe: send the output of one command to another
-                   command1 | command2
-                   example: cat file_name | grep word | less
-echo            -> print text to the terminal        -> echo "hello!"
-                   ! echo can quickly write text into a file (overwrites the file):
-                     echo "your_string" > file_name
-                   ! use >> to append instead of overwrite:
-                     echo "your_string" >> file_name
+tail -n 5       -> show the last 5 lines             -> tail -n 5 file_name
+tail -f         -> follow a file live (great for logs) -> tail -f /var/log/syslog
+less            -> view a file page by page, with scrolling -> less file_name
+                   inside less: / to search, n = next match, q = quit, space = next page
 nano            -> open a file in the nano editor    -> nano file_name
+                   Ctrl+O = save, Ctrl+X = exit
 vim             -> open a file in the vim editor     -> vim file_name
+                   i = insert mode, Esc = normal mode
+                   :w = save, :q = quit, :wq = save and quit, :q! = quit without saving
 diff            -> show the differences between two files -> diff file1 file2
 diff -u         -> show the differences in unified format -> diff -u file1 file2
 shred           -> overwrite a file so it cannot be recovered -> shred file_name
@@ -70,49 +110,235 @@ shred           -> overwrite a file so it cannot be recovered -> shred file_name
                    add -u to also delete the file afterwards -> shred -u file_name
 
 ==================================================
-Help
+5. Searching
 ==================================================
-man             -> show the manual page of a command -> man command_name
-clear           -> clear the terminal screen
+grep            -> search for a word or text in a file -> grep word file_name
+grep -i         -> ignore upper/lower case           -> grep -i word file_name
+grep -n         -> show line numbers                 -> grep -n word file_name
+grep -r         -> search in all files of a directory -> grep -r word folder_name
+grep -v         -> show lines that do NOT match      -> grep -v word file_name
+find            -> search for files and directories
+                   find /path -name "file_name"      (by name)
+                   find /path -iname "*.txt"         (by name, ignore case)
+                   find /path -type d                (only directories)
+                   find /path -type f -size +100M    (files bigger than 100 MB)
+                   find /path -mtime -7              (changed in the last 7 days)
+locate          -> fast file search using a database -> locate file_name
+                   ! update the database first with: sudo updatedb
+which           -> show the path of a command         -> which python3
+whereis         -> show the binary, source and manual of a command -> whereis ls
+type            -> show how the shell sees a command (alias, builtin, file) -> type ls
 
 ==================================================
-System information
+6. Text processing
 ==================================================
-uname -a        -> show system information
-df -h           -> show disk space usage (human-readable)
-free -m         -> show RAM usage in MB
+wc              -> count lines, words and bytes      -> wc file_name
+wc -l           -> count only lines                  -> wc -l file_name
+sort            -> sort lines                        -> sort file_name
+sort -r         -> sort in reverse order             -> sort -r file_name
+sort -n         -> sort numbers correctly            -> sort -n file_name
+uniq            -> remove duplicate lines that are next to each other
+                   ! sort first -> sort file_name | uniq
+uniq -c         -> count how many times each line appears -> sort file_name | uniq -c
+cut             -> cut columns from text
+                   cut -d ":" -f 1 /etc/passwd       (first field, separated by :)
+tr              -> translate or delete characters    -> echo "hello" | tr a-z A-Z
+sed             -> find and replace in text
+                   sed 's/old/new/' file_name        (replace first match in each line)
+                   sed 's/old/new/g' file_name       (replace all matches)
+                   sed -i 's/old/new/g' file_name    (edit the file in place)
+awk             -> process text by columns
+                   awk '{print $1}' file_name        (print the first column)
+xargs           -> use the output of one command as arguments of another
+                   find . -name "*.log" | xargs rm
+tee             -> show output AND save it to a file -> command | tee file_name
+
+==================================================
+7. Redirection and pipes
+==================================================
+|               -> pipe: send the output of one command to another
+                   command1 | command2
+                   example: cat file_name | grep word | less
+>               -> write output to a file (overwrites)   -> echo "text" > file_name
+>>              -> append output to a file               -> echo "text" >> file_name
+<               -> use a file as input                   -> sort < file_name
+2>              -> write errors to a file                -> command 2> errors.txt
+&>              -> write output and errors to a file     -> command &> all.txt
+2>/dev/null     -> hide error messages                   -> command 2>/dev/null
+&&              -> run the next command only if the first one succeeds
+                   -> mkdir test && cd test
+;               -> run commands one after another        -> command1 ; command2
+echo            -> print text to the terminal            -> echo "hello!"
+                   ! quickly write text into a file (overwrites the file):
+                     echo "your_string" > file_name
+                   ! append instead of overwrite:
+                     echo "your_string" >> file_name
+
+==================================================
+8. Help and shell tricks
+==================================================
+man             -> show the manual page of a command -> man command_name
+command --help  -> short help of a command           -> ls --help
+clear           -> clear the terminal screen (or Ctrl+L)
+history         -> show previously used commands
+!!              -> run the last command again        -> sudo !!  (run last command with sudo)
+!number         -> run a command from history by its number -> !42
+alias           -> create a shortcut for a command   -> alias ll='ls -lah'
+                   ! to keep it forever, add it to ~/.zshrc (or ~/.bashrc)
+unalias         -> remove an alias                   -> unalias ll
+export          -> set an environment variable       -> export NAME=value
+env             -> show all environment variables
+echo $PATH      -> show where the shell looks for commands
+date            -> show current date and time
+cal             -> show a calendar
+source          -> reload a config file              -> source ~/.zshrc
+watch           -> run a command again and again     -> watch -n 2 df -h  (every 2 seconds)
+
+==================================================
+9. System information
+==================================================
+uname -a        -> show system information (kernel, architecture)
+hostname        -> show the computer name
+cat /etc/os-release -> show the Linux distribution and version
+lscpu           -> show CPU information
+lsblk           -> show disks and partitions
+lsusb           -> show USB devices
+lspci           -> show PCI devices (graphics card, network card, ...)
 uptime          -> show how long the system has been running
 whoami          -> show your username
 id              -> show user ID and group information
+dmesg           -> show kernel messages (hardware, drivers)
+fastfetch       -> show system info in a pretty way
 
 ==================================================
-Processes
+10. Disk and storage
+==================================================
+df -h           -> show disk space usage of all mounted drives (human-readable)
+du -sh          -> show the total size of a folder   -> du -sh folder_name
+du -sh *        -> show the size of every item in the current directory
+du -h --max-depth=1 -> sizes of sub-folders one level deep
+lsblk           -> show disks and partitions
+mount           -> show mounted file systems, or mount a device
+                   sudo mount /dev/sdb1 /mnt
+umount          -> unmount a device                  -> sudo umount /mnt
+free -h         -> show RAM usage (see section 21)
+
+==================================================
+11. Processes and jobs
 ==================================================
 top             -> show running processes (live)
+htop            -> a better top (install: sudo apt install htop)
 ps aux          -> show all running processes
+ps aux | grep name -> find a specific process
+pgrep           -> find a process ID by name         -> pgrep firefox
 kill            -> stop a process by its ID          -> kill process_id
+kill -9         -> force stop a process              -> kill -9 process_id
 killall         -> stop all processes by name        -> killall process_name
+pkill           -> stop processes by name pattern    -> pkill name
+lsof            -> show open files and which process uses them
+                   lsof -i :80                       (who uses port 80)
+&               -> run a command in the background   -> command &
+jobs            -> show background jobs
+bg              -> continue a stopped job in the background
+fg              -> bring a background job to the front
+nohup           -> keep a command running after you close the terminal -> nohup command &
+Ctrl+C          -> stop the running command
+Ctrl+Z          -> pause the running command
 
 ==================================================
-Users and permissions
+12. Users and groups
 ==================================================
 sudo            -> run a command with root (admin) access -> sudo command
 sudo -s         -> open a root shell
 su              -> switch to another user            -> su user_name
+su -            -> switch to another user with their full environment
                    ! type exit to go back to your previous user
 adduser         -> create a new user (interactive, asks for password and info) -> sudo adduser user_name
 useradd         -> create a new user (low-level: no password and, by default, no home directory)
                    ! requires sudo
 passwd          -> change a user's password          -> sudo passwd user_name
 deluser         -> delete a user                     -> sudo deluser user_name
+groups          -> show the groups of a user         -> groups user_name
+usermod         -> modify a user
+                   sudo usermod -aG sudo user_name   (add a user to the sudo group)
+                   ! -a means "append", never forget it, or the user is removed from other groups
+addgroup        -> create a new group                -> sudo addgroup group_name
+who             -> show who is logged in
+last            -> show the login history
 
 ==================================================
-Network
+13. Permissions and ownership
+==================================================
+ls -l shows something like:  -rwxr-xr--
+  first character: - = file, d = directory, l = link
+  next 9 characters: owner (rwx), group (r-x), others (r--)
+  r = read (4), w = write (2), x = execute (1)
+
+chmod           -> change permissions
+                   chmod 755 file_name               (owner: rwx, group: r-x, others: r-x)
+                   chmod 644 file_name               (owner: rw-, group: r--, others: r--)
+                   chmod +x script.sh                (make a file executable)
+                   chmod -x script.sh                (remove execute permission)
+                   chmod -R 755 folder_name          (apply to everything inside)
+chown           -> change the owner of a file        -> sudo chown user_name file_name
+                   sudo chown user:group file_name   (change owner and group)
+                   sudo chown -R user:group folder   (apply to everything inside)
+chgrp           -> change the group of a file        -> sudo chgrp group_name file_name
+umask           -> show the default permission mask for new files
+
+==================================================
+14. Archives and compression
+==================================================
+tar -cvf        -> create an archive                 -> tar -cvf archive.tar folder_name
+tar -xvf        -> extract an archive                -> tar -xvf archive.tar
+tar -czvf       -> create a compressed archive (.tar.gz) -> tar -czvf archive.tar.gz folder_name
+tar -xzvf       -> extract a .tar.gz archive         -> tar -xzvf archive.tar.gz
+tar -tvf        -> list the content of an archive without extracting
+                   (c = create, x = extract, v = verbose, f = file, z = gzip, t = list)
+zip             -> create a zip file                 -> zip -r archive.zip folder_name
+unzip           -> extract a zip file                -> unzip archive.zip
+gzip            -> compress a file (replaces it)     -> gzip file_name
+gunzip          -> decompress a .gz file             -> gunzip file_name.gz
+                   ! zip and unzip: sudo apt install zip unzip
+
+==================================================
+15. Network
+==================================================
+ip a            -> show network interfaces and IP addresses
+ip r            -> show the routing table
+hostname -I     -> show your IP addresses
+ping            -> test the connection to a host     -> ping google.com
+                   ! Ctrl+C to stop, or use -c 4 to send only 4 packets
+curl            -> send a request / download from a URL -> curl https://example.com
+curl -O         -> download a file and keep its name -> curl -O https://example.com/file.zip
+wget            -> download a file                   -> wget https://example.com/file.zip
+ss -tuln        -> show listening ports (replaces netstat)
+nslookup        -> look up the IP of a domain        -> nslookup google.com
+dig             -> detailed DNS lookup               -> dig google.com
+traceroute      -> show the path to a host           -> traceroute google.com
+ufw             -> simple firewall (Ubuntu)
+                   sudo ufw status                   (show status)
+                   sudo ufw enable                   (turn on)
+                   sudo ufw allow 22                 (allow SSH)
+                   sudo ufw deny 80                  (block port 80)
+
+==================================================
+16. SSH and file transfer
 ==================================================
 ssh             -> connect securely to a remote server or PC -> ssh user_name@your_ip
+ssh -p          -> connect using a different port    -> ssh -p 2222 user_name@your_ip
+ssh-keygen      -> create an SSH key pair            -> ssh-keygen -t ed25519
+ssh-copy-id     -> copy your public key to a server (login without password)
+                   ssh-copy-id user_name@your_ip
+scp             -> copy files over SSH
+                   scp file_name user_name@your_ip:/remote/path        (upload)
+                   scp user_name@your_ip:/remote/file_name .           (download)
+                   scp -r folder_name user_name@your_ip:/remote/path   (copy a folder)
+rsync           -> fast copy and sync (only copies changes)
+                   rsync -avh source/ user_name@your_ip:/remote/path/
 
 ==================================================
-Links
+17. Links
 ==================================================
 ln              -> create a link (similar to a shortcut in Windows)
                    ! there are two types:
@@ -124,27 +350,101 @@ ln              -> create a link (similar to a shortcut in Windows)
 ln -s           -> ln -s target link_name
                    example:
                    ln -s /home/user/documents/original_file.txt /home/user/desktop/link_to_original.txt
+readlink        -> show where a soft link points to -> readlink link_name
 
 ==================================================
-Package management (Debian/Ubuntu)
+18. Package management (Debian/Ubuntu)
 ==================================================
 sudo apt update             -> refresh the package list
 sudo apt upgrade            -> upgrade all installed packages
+sudo apt full-upgrade       -> upgrade and also handle changed dependencies
 sudo apt install            -> install an app or package -> sudo apt install package_name
 sudo apt remove             -> remove an app or package  -> sudo apt remove package_name
+sudo apt purge              -> remove a package AND its config files -> sudo apt purge package_name
+sudo apt autoremove         -> remove packages that are no longer needed
+sudo apt autoclean          -> clean old downloaded package files
+apt search                  -> search for a package      -> apt search word
+apt show                    -> show package details      -> apt show package_name
+apt list --installed        -> list installed packages
+dpkg -i                     -> install a local .deb file -> sudo dpkg -i file_name.deb
+dpkg -l                     -> list installed packages
 
 ==================================================
-Monitoring memory (RAM)
+19. Services and logs (systemd)
+==================================================
+systemctl status service_name    -> show the status of a service
+sudo systemctl start service_name    -> start a service
+sudo systemctl stop service_name     -> stop a service
+sudo systemctl restart service_name  -> restart a service
+sudo systemctl enable service_name   -> start a service at boot
+sudo systemctl disable service_name  -> do not start a service at boot
+systemctl list-units --type=service  -> list all services
+journalctl                       -> show system logs
+journalctl -u service_name       -> show logs of one service
+journalctl -f                    -> follow logs live
+journalctl -b                    -> show logs since the last boot
+/var/log/                        -> the folder where many log files live
+
+==================================================
+20. Scheduled tasks (cron)
+==================================================
+crontab -e      -> edit your scheduled tasks
+crontab -l      -> list your scheduled tasks
+                   format:  minute hour day month weekday command
+                   example: 30 2 * * * /home/user/backup.sh   (every day at 02:30)
+                   example: */5 * * * * command               (every 5 minutes)
+at              -> run a command once at a given time -> echo "command" | at 10:00
+
+==================================================
+21. Monitoring memory (RAM)
 ==================================================
 1 -> free      -> RAM information in KB
 2 -> free -m   -> RAM information in MB
 3 -> free -g   -> RAM information in GB
 4 -> free -h   -> RAM information in human-readable format (recommended)
+5 -> cat /proc/meminfo -> detailed memory information
 
 ==================================================
-Monitoring CPU
+22. Monitoring CPU
 ==================================================
 1 -> cat /proc/cpuinfo
-2 -> install htop, then run it:
+2 -> lscpu
+3 -> install htop, then run it:
      sudo apt install htop
      htop
+4 -> btop (a prettier alternative)
+
+==================================================
+23. Power
+==================================================
+sudo reboot             -> restart the computer
+sudo shutdown now       -> shut down now
+sudo shutdown -h +10    -> shut down after 10 minutes
+sudo shutdown -c        -> cancel a scheduled shutdown
+
+==================================================
+24. Keyboard shortcuts (terminal)
+==================================================
+Ctrl+C      -> stop the running command
+Ctrl+Z      -> pause the running command
+Ctrl+D      -> exit the shell (end of input)
+Ctrl+L      -> clear the screen
+Ctrl+A      -> go to the start of the line
+Ctrl+E      -> go to the end of the line
+Ctrl+U      -> delete from the cursor to the start of the line
+Ctrl+K      -> delete from the cursor to the end of the line
+Ctrl+W      -> delete the previous word
+Ctrl+R      -> search the command history
+Tab         -> auto-complete (press twice to see the options)
+Up / Down   -> browse the command history
+
+==================================================
+25. Quick danger list (think before you press Enter!)
+==================================================
+rm -rf          -> deletes without asking and without undo
+rm -rf /        -> NEVER run this, it tries to delete the whole system
+shred           -> destroys the data permanently
+dd              -> writes raw data to disks, a wrong target destroys a disk
+> file_name     -> overwrites a file; use >> if you want to append
+chmod -R 777    -> gives everyone full access, a security risk
+sudo            -> double-check every command that starts with sudo
